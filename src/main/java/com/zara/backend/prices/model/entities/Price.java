@@ -2,6 +2,7 @@ package com.zara.backend.prices.model.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.boot.jackson.JsonComponent;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,18 +15,19 @@ public class Price {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "brand_id")
     private Long id;
 
+    private Long brandId;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime startDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime endDate;
 
     private Long priceList;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    private Long productId;
 
     private Long priority;
 
