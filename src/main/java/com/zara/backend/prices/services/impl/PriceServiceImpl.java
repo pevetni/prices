@@ -1,6 +1,7 @@
 package com.zara.backend.prices.services.impl;
 
 import com.zara.backend.prices.model.entities.Price;
+import com.zara.backend.prices.model.response.PriceResponse;
 import com.zara.backend.prices.repositories.PriceRepository;
 import com.zara.backend.prices.services.PriceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,15 @@ public class PriceServiceImpl implements PriceService {
     }
 
     @Override
-    public Price findByProductIdAndBrandIdAndDateBetweenOrderByPriorityDesc(Long productId, Long brandId, LocalDateTime date) {
-        return priceRepository.findByProductIdAndBrandIdAndDateBetweenOrderByPriorityDesc(productId, brandId, date);
+    public PriceResponse findByProductIdAndBrandIdAndDateBetweenOrderByPriorityDesc(Long productId, Long brandId, LocalDateTime date) {
+        Price price = priceRepository.findByProductIdAndBrandIdAndDateBetweenOrderByPriorityDesc(productId, brandId, date);
+        return PriceResponse.builder()
+                .productId(price.getProductId())
+                .brandId(price.getBrandId())
+                .priceList(price.getPriceList())
+                .startDate(price.getStartDate())
+                .endDate(price.getEndDate())
+                .price(price.getPrice())
+                .build();
     }
 }
