@@ -1,13 +1,10 @@
 package com.zara.backend.prices.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.zara.backend.prices.PricesApplication;
 import com.zara.backend.prices.model.response.PriceResponse;
 import com.zara.backend.prices.models.request.RequestPriceTest;
+import com.zara.backend.prices.services.PriceService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -19,9 +16,12 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = PricesApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,6 +38,9 @@ class PriceControllerTest {
 
     @Autowired
     ObjectMapper objectMapper;
+
+    @Autowired
+    PriceService priceService;
 
     @BeforeEach
     void setUp() {
@@ -89,7 +92,7 @@ class PriceControllerTest {
     }
 
     @DisplayName("Find current price")
-    @RepeatedTest(value = 5, name = "{displayName} - Repetition number {currentRepetition} of {totalRepetitions}")
+    @RepeatedTest(value = 5, name = "{displayName} - Test case number {currentRepetition} of {totalRepetitions}")
     void findCurrentPriceTariff(RepetitionInfo info) throws Exception {
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
 
@@ -105,6 +108,18 @@ class PriceControllerTest {
         String expected = testCases.get(info.getCurrentRepetition()-1).getExpectedResult();
 
         JSONAssert.assertEquals(expected, convertToJson(response.getBody()), false);
+    }
+
+    @Test
+    @DisplayName("Catching exception NoSuchElementException")
+    void findCurrentPriceTariff_ThrowNoSuchElementException() {
+        NoSuchElementException thrown = assertThrows(
+                NoSuchElementException.class,
+                () -> priceService.findByProductIdAndBrandIdAndDateBetweenOrderByPriorityDesc(9999L, 1L, LocalDateTime.of(2020, 06, 15, 21, 00, 00)),
+                "Price not found for productId = 9999, brandId = 1 and date = 2020-06-15T21:00:00"
+        );
+
+        assertTrue(thrown.getMessage().contains("Price not found"));
     }
 
     private String createURL(String uri) {

@@ -3,6 +3,4 @@ INSERT INTO prices (id, brand_id, start_date, end_date, price_list, product_id, 
 INSERT INTO prices (id, brand_id, start_date, end_date, price_list, product_id, priority, price, currency) VALUES (3, 1, '2020-06-15 00.00.00', '2020-06-15 11.00.00', 3, 35455, 1, 30.50, 'EUR');
 INSERT INTO prices (id, brand_id, start_date, end_date, price_list, product_id, priority, price, currency) VALUES (4, 1, '2020-06-15 16.00.00', '2020-12-31 23.59.59', 4, 35455, 1, 38.95, 'EUR');
 
-INSERT INTO products (id, name) VALUES (1, 'product zara 1');
-
 commit;

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class PriceServiceImpl implements PriceService {
@@ -24,6 +25,7 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public PriceResponse findByProductIdAndBrandIdAndDateBetweenOrderByPriorityDesc(Long productId, Long brandId, LocalDateTime date) {
         Price price = priceRepository.findByProductIdAndBrandIdAndDateBetweenOrderByPriorityDesc(productId, brandId, date);
+        if (price == null) throw new NoSuchElementException("Price not found for productId = "+productId+", brandId = "+brandId+" and date = "+date.toString());
         return PriceResponse.builder()
                 .productId(price.getProductId())
                 .brandId(price.getBrandId())

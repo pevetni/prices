@@ -9,8 +9,3 @@ CREATE TABLE IF NOT EXISTS prices (
                        price DECIMAL(10,2),
                        currency VARCHAR(3)
 );
-
-CREATE TABLE IF NOT EXISTS products (
-                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                         name VARCHAR(255)
-);
